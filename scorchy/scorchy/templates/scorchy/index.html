@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+      }
+      #scorchy-wrapper {
+        width: 1000px;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+      }
+      #scorchy-inner-wrapper {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+      }
+      #scorchy-feature {
+        display: flex;
+        flex-flow: row nowrap;
+        margin-bottom: 10px;
+      }
+
+      #scorchy-slots {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 10px;
+        width: fit-content;
+        margin-bottom: 10px;
+      }
+
+      #scorchy-row {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 10px;
+      }
+
+      #scorchy-row img {
+        border: 1px solid transparent;
+      }
+
+      #scorchy-row:nth-child(odd) img {
+        opacity: 0.5;
+      }
+
+      #scorchy-row:nth-child(even) img {
+        border-color: black;
+      }
+
+      #scorchy-hold {
+        background-color: #ffffee;
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        padding: 5px 40px;
+        margin-bottom: 10px;
+      }
+
+      .scorchy-hold-node {
+        display: flex;
+        flex-flow: column nowrap;
+      }
+
+      .scorchy-hold-node label {
+        font-weight: bold;
+        color: red;
+        text-transform: uppercase;
+      }
+
+      input[type="submit"] {
+        margin-bottom: 10px;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/" method="POST">
+      {% csrf_token %}
+      <div id="scorchy-wrapper">
+        <div id="scorchy-inner-wrapper">
+          <div id="scorchy-slots">
+            <div id="scorchy-row">
+              {% for fruit in top_faded %}
+              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
+              {% endfor %}
+            </div>
+            <div id="scorchy-row">
+              {% for fruit in roll %}
+              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
+              {% endfor %}
+            </div>
+            <div id="scorchy-row">
+              {% for fruit in bottom_faded %}
+              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
+              {% endfor %}
+            </div>
+          </div>
+          {% if manual_hold %}
+          <div id="scorchy-hold">
+            <div class="scorchy-hold-node">
+              <label for="scorchy_hold_node_1">Hold</label>
+              <input type="checkbox" name="scorchy_hold_node_1" />
+              <input
+                type="hidden"
+                name="scorchy_hold_fruit_1"
+                value="{{ roll.0 }}"
+              />
+            </div>
+            <div class="scorchy-hold-node">
+              <label for="scorchy_hold_node_2">Hold</label>
+              <input type="checkbox" name="scorchy_hold_node_2" />
+              <input
+                type="hidden"
+                name="scorchy_hold_fruit_2"
+                value="{{ roll.1 }}"
+              />
+            </div>
+            <div class="scorchy-hold-node">
+              <label for="scorchy_hold_node_3">Hold</label>
+              <input type="checkbox" name="scorchy_hold_node_3" />
+              <input
+                type="hidden"
+                name="scorchy_hold_fruit_3"
+                value="{{ roll.2 }}"
+              />
+            </div>
+            <div class="scorchy-hold-node">
+              <label for="scorchy_hold_node_4">Hold</label>
+              <input type="checkbox" name="scorchy_hold_node_4" />
+              <input
+                type="hidden"
+                name="scorchy_hold_fruit_4"
+                value="{{ roll.3 }}"
+              />
+            </div>
+          </div>
+          {% endif %} {% if hold_feature %}
+          <b>- FEATURE POSITION HELD FOR NEXT SPIN -</b>
+          <!-- Temporary and unsafe -->
+          <input
+            type="hidden"
+            name="hold_feature_value"
+            value="{{ feature_sum }}"
+          />
+          {% endif %}
+          <!-- This can be cleaned up -->
+          <div id="scorchy-feature">
+            {% if feature_sum >= 1 %}
+            <img src="{% static 'scorchy/images/feature/1lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/1dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 2 %}
+            <img src="{% static 'scorchy/images/feature/2lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/2dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 3 %}
+            <img src="{% static 'scorchy/images/feature/3lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/3dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 4 %}
+            <img src="{% static 'scorchy/images/feature/4lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/4dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 5 %}
+            <img src="{% static 'scorchy/images/feature/5lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/5dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 6 %}
+            <img src="{% static 'scorchy/images/feature/6lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/6dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 7 %}
+            <img src="{% static 'scorchy/images/feature/7lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/7dull.gif' %}" />
+            {% endif %} {% if feature_sum >= 8 %}
+            <img src="{% static 'scorchy/images/feature/8lit.gif' %}" />
+            {% else %}
+            <img src="{% static 'scorchy/images/feature/8dull.gif' %}" />
+            {% endif %}
+          </div>
+          {% if feature_win_message %}
+          <strong>THE VOLCANO ERUPTS!!!</strong>
+          <p>{{ feature_win_message }}</p>
+          <!-- This should not say "Collect Winnings" for negative events -->
+          <input type="submit" value="Collect Winnings" />
+          {% elif win %}
+          <!-- Temporary win message -->
+          <p>Hooray you won! Prize: {{ win }}</p>
+          <input type="submit" value="Collect Winnings" />
+          {% else %}
+          <input type="submit" value="Play Again" />
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </body>
+</html>
