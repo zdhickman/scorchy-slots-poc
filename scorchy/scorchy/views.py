@@ -221,11 +221,11 @@ def slots(request):
     if not update_np(temp_user_id, -5):
         return render(request, 'scorchy/no_np.html')
 
+    jackpot = fetch_jackpot()
+    update_jackpot()
     holds = fetch_hold(temp_user_id)
     last_roll = fetch_roll(temp_user_id)
     feature_sum = last_roll.feature_sum if last_roll and last_roll.is_rollover else 0
-    jackpot = fetch_jackpot()
-    update_jackpot()
     
     roll = []
     for i in range(4):
