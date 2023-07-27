@@ -1,78 +1,20 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import random
 from .forms import ScorchyForm
+from .constants import SpecialWins, FEATURE_WIN_OPTIONS, FRUIT_OPTIONS, FRUIT_WINS, INITIAL_JACKPOT
+from .models import Holds, Roll, Jackpot
 
-# See: https://www.reddit.com/r/neopets/comments/xu8akc/scorchy_slots_dicearoo/
-# There are only so many fruit + number combos implemented in Scorchy Slots. Not every fruit
-# has a variation with every number.
-#
-# Further, the odds in the linked post are actually calculated based on this array,
-# where some fruit + number combos are duplicated. That's why you see four cherry + 0 options
-# that add up to 4/21 odds of rolling a cherry, versus three different strawberry options that
-# add up to 3/21 odds of rolling a strawberry.
-FRUIT_OPTIONS = [
-    # Cherry 4/21
-    'cherry_0', 'cherry_0', 'cherry_0', 'cherry_0',
-
-    # Strawberry 3/21
-    'strawberry_0', 'strawberry_1', 'strawberry_2',
-
-    # Grapes 2/21
-    'grapes_0', 'grapes_1',
-
-    # Melon 3/21
-    'melon_0', 'melon_1', 'melon_3',
-
-    # Apple 2/21
-    'apple_0', 'apple_1',
-
-    # Peach 2/21
-    'peach_1', 'peach_0',
-
-    # Bell 2/21
-    'bell_0', 'bell_3',
-
-    # Faerie 1/21
-    'faerie_0',
-
-    # Map Piece 1/21
-    'mappiece_0',
-
-    # Gold Bag 1/21
-    'baggold_0',
-]
-
-# This is simplified for the POC - some outcomes here are constant, and some are random
-# in some undetermined range. See https://www.jellyneo.net/?go=scorchy_slots
-FEATURE_WIN_OPTIONS = [
-    "It's raining Neopoints, you pick up as many as you can carry!",
-    "A couple of Neopoints rain from the sky, you pick up a handful.",
-    "A flock of Korbats surround you. When they leave you are 20 Neopoints poorer!",
-    "An evil Scorchio flies out of the Volcano and steals 10 Neopoints from you!!",
-    "One of your Neopoints erupts in flames!",
-    "The Volcano says 'Sorry, out of luck mate!'",
-    "You only win a single Neopoint :(",
-    "Two Neopoints fall out of the sky onto your head.",
-    "Twenty Neopoints fly out of the volcano!!",
-    "A light faerie magically appears next to you and gives you 30 Neopoints!",
-    "A bag containing 50 Neopoints falls from the sky onto your foot.",
-]
-
-# Rewards for three or four in a row - see https://www.jellyneo.net/?go=scorchy_slots
-# This is also simplified for the POC.
-WINS = {
-    'cherry': { 3: 15, 4: 75 },
-    'strawberry': { 3: 30, 4: 150 },
-    'grapes': { 3: 60, 4: 300 },
-    'melon': { 3: 90, 4: 450 },
-    'apple': { 3: 120, 4: 500 },
-    'peach': { 3: 180, 4: 900 },
-    'bell': { 3: 240, 4: 1200 },
-    'baggold': { 3: 600, 4: 'jackpot' },
-    'mappiece': { 3: 'a map piece', 4: 'three map pieces' },
-    'faerie': { 3: 'a bottled faerie', 4: '6 bottled faeries' }
-}
+def get_feature_win():
+    feature_win = random.choice(FEATURE_WIN_OPTIONS)
+    message = feature_win['message']
+    amount = feature_win['amount']
+    if type(amount) is not int:
+        amount = amount()
+    return {
+        'message': message,
+        'amount': amount,
+    }
 
 # Check for 3 or 4 in a row
 def calculate_win(roll):
@@ -86,77 +28,256 @@ def calculate_win(roll):
         return False
     
     # 4 in a row
-    if fruit1 == fruit0 and fruit1 == fruit3:
-        return WINS[fruit1][4]
+    elif fruit1 == fruit0 and fruit1 == fruit3:
+        return FRUIT_WINS[fruit1][4]
     
     # 3 in a row
     elif fruit1 == fruit0 or fruit1 == fruit3:
-        return WINS[fruit1][3]
+        return FRUIT_WINS[fruit1][3]
     
     # 2 in a row
     else:
         return False
+    
+def get_win_amount(win_dict, jackpot):
+    amount = win_dict['amount']
+
+    if amount == SpecialWins.JACKPOT:
+        return jackpot
+    elif amount in [SpecialWins.MAP_PIECE, SpecialWins.THREE_MAP_PIECES, SpecialWins.BOTTLED_FAERIE, SpecialWins.SIX_BOTTLED_FAERIES]:
+        return 0
+    
+    return amount
+
+def get_win_message(win_dict, jackpot):
+    amount = win_dict['amount']
+    message = win_dict['message']
+
+    if amount == SpecialWins.JACKPOT:
+        return message.format(jackpot)
+    
+    return message
+
+def handle_win(win_dict, jackpot):
+    amount = win_dict['amount']
+
+    if amount == SpecialWins.JACKPOT:
+        update_np(temp_user_id, jackpot)
+        reset_jackpot()
+    elif amount == SpecialWins.MAP_PIECE:
+        # add a random map piece
+        pass
+    elif amount == SpecialWins.THREE_MAP_PIECES:
+        # add three random map pieces
+        pass
+    elif amount == SpecialWins.BOTTLED_FAERIE:
+        # add a bottled faerie
+        pass
+    elif amount == SpecialWins.SIX_BOTTLED_FAERIES:
+        # add six bottled faeries
+        pass
+    else:
+        update_np(temp_user_id, amount)
+    
+
+
+############
+# DB Stuff #
+############
+
+temp_user_id = '123456'
+
+def fetch_jackpot():
+    try:
+        jackpot_row = Jackpot.objects.get(id=1)
+        return jackpot_row.jackpot
+    except Exception as e:
+        print(e)
+        return 0
+
+def update_jackpot():
+    try:
+        jackpot_row = Jackpot.objects.get(id=1)
+        jackpot_row.jackpot += 5
+        jackpot_row.save()
+    except Exception as e:
+        print(e)
+
+def reset_jackpot():
+    try:
+        jackpot_row = Jackpot.objects.get(id=1)
+        jackpot_row.jackpot = INITIAL_JACKPOT
+        jackpot_row.save()
+    except Exception as e:
+        print(e)
+
+def fetch_hold(user_id):
+    try:
+        holds_row = Holds.objects.get(user_id=user_id)
+        holds = []
+        holds.append(holds_row.hold_0)
+        holds.append(holds_row.hold_1)
+        holds.append(holds_row.hold_2)
+        holds.append(holds_row.hold_3)
+        return holds
+    except Holds.DoesNotExist:
+        return [False, False, False, False]
+
+# TODO: migrate fruits to 0 index    
+def fetch_roll(user_id):
+    try:
+        most_recent_roll = Roll.objects.filter(user_id=user_id).latest('id')
+        most_recent_roll.roll = []
+        most_recent_roll.roll.append(most_recent_roll.fruit_0)
+        most_recent_roll.roll.append(most_recent_roll.fruit_1)
+        most_recent_roll.roll.append(most_recent_roll.fruit_2)
+        most_recent_roll.roll.append(most_recent_roll.fruit_3)
+        return most_recent_roll
+    except Roll.DoesNotExist:
+        # Handle the case when there are no rolls for the given user_id
+        return None
+    
+def insert_new_roll(user_id, roll, is_holdable, is_rollover, feature_sum):
+    try:
+        new_roll = Roll.objects.create(
+            user_id=user_id,
+            fruit_0=roll[0],
+            fruit_1=roll[1],
+            fruit_2=roll[2],
+            fruit_3=roll[3],
+            is_holdable=is_holdable,
+            is_rollover=is_rollover,
+            feature_sum=feature_sum
+        )
+        return new_roll
+    except Exception as e:
+        print(e)
+        # Handle any exceptions that may occur during the creation and save process
+        # For example, you can log the error or return None to indicate failure
+        return None
+    
+def clear_hold(user_id):
+    return insert_or_update_hold(user_id, [False, False, False, False])
+
+# TODO: upsert?    
+def insert_or_update_hold(user_id, holds):
+    try:
+        hold_instance = Holds.objects.get(user_id=user_id)
+    except Holds.DoesNotExist:
+        # If the row doesn't exist, create a new one with the given user_id
+        hold_instance = Holds(user_id=user_id)
+
+    try:
+        # Update the values for hold_0, hold_1, hold_2, and hold_3
+        hold_instance.hold_0 = holds[0]
+        hold_instance.hold_1 = holds[1]
+        hold_instance.hold_2 = holds[2]
+        hold_instance.hold_3 = holds[3]
+
+        # Save the instance (either the newly created one or the updated one)
+        hold_instance.save()
+
+    except Exception as e:
+        # Handle any exceptions that may occur during the creation and save process
+        # For example, you can log the error or return None to indicate failure
+        return None
+
+# Placeholder - update NPs for user
+def update_np(temp_user_id, np):
+    return True
+    # return False
+
+##########
+# Render #
+##########
 
 def index(request):
-    # feature_sum = the number of spots lit up at the bottom
-    feature_sum = 0
-    holds = [False, False, False, False]
+    jackpot = fetch_jackpot()
+    return render(request, 'scorchy/index.html', {
+        'jackpot': jackpot,
+    })
 
-    # We are checking for user-submitted values here without knowing if the UI actually gave an option
-    # to manually hold. We're also passing the feature_sum blindly into the form. Both of these behaviors
-    # are unsafe and open to exploitation.
+def slotwins(request):
+    return render(request, 'scorchy/slotwins.html')
+
+def process_slots(request):
     if request.method == 'POST':
-        form = ScorchyForm(request.POST)
-        if form.is_valid():
-            feature_sum = form.cleaned_data['hold_feature_value'] or 0
-            holds[0] = form.cleaned_data['scorchy_hold_fruit_1'] if form.cleaned_data['scorchy_hold_node_1'] else False
-            holds[1] = form.cleaned_data['scorchy_hold_fruit_2'] if form.cleaned_data['scorchy_hold_node_2'] else False
-            holds[2] = form.cleaned_data['scorchy_hold_fruit_3'] if form.cleaned_data['scorchy_hold_node_3'] else False
-            holds[3] = form.cleaned_data['scorchy_hold_fruit_4'] if form.cleaned_data['scorchy_hold_node_4'] else False
+        last_roll = fetch_roll(temp_user_id)
+
+        if last_roll and last_roll.is_holdable:
+            form = ScorchyForm(request.POST)
+            if form.is_valid():
+                holds = []
+                holds.append(form.cleaned_data['scorchy_hold_0'])
+                holds.append(form.cleaned_data['scorchy_hold_1'])
+                holds.append(form.cleaned_data['scorchy_hold_2'])
+                holds.append(form.cleaned_data['scorchy_hold_3'])
+                insert_or_update_hold(temp_user_id, holds)
     
-    # roll = the middle row
-    # Check for holds the user selected, if there isn't one, roll a new one
+    return redirect('/slots')
+
+
+def slots(request):
+    if not update_np(temp_user_id, -5):
+        return render(request, 'scorchy/no_np.html')
+
+    holds = fetch_hold(temp_user_id)
+    last_roll = fetch_roll(temp_user_id)
+    feature_sum = last_roll.feature_sum if last_roll and last_roll.is_rollover else 0
+    jackpot = fetch_jackpot()
+    update_jackpot()
+    
     roll = []
     for i in range(4):
         if holds[i]:
-            fruit = holds[i]
+            fruit = last_roll.roll[i]
         else:
-            # Every fruit roll is entirely independent of all other rolls
             fruit = random.choice(FRUIT_OPTIONS)
         
-        # We add to the feature_sum again, even if the user did a manual hold
         feature_sum += int(fruit.split('_')[1])
         roll.append(fruit)
 
-    # faded = top and bottom rows
-    faded = []
-    while len(faded) < 8:
-        fruit = random.choice(FRUIT_OPTIONS)
-        faded.append(fruit)
+    clear_hold(temp_user_id)
 
-    win = calculate_win(roll)
-    
-    # Rolling 1 through 12 to satisfy these odds:
-    # 1/6 chance that the feature rolls over to the next spin (these odds are verified to match retail)
-    # If rolling over, then 1/2 chance to let the user manually hold (these odds are NOT verified)
-    hold_random = random.randint(1, 12)
-
-    # For now, if the user got 3 or 4 in a row, don't enable the feature hold (NOT verified)
-    hold_feature = not win and hold_random >= 11
-    manual_hold = not win and hold_random == 12
-
-    # Superficial - pick a random feature win (odds for picking a feature win are NOT verified)
+    win_dict = calculate_win(roll)
+    win_amount = 0
+    win_message = ""
     feature_win_message = False
-    if feature_sum >= 8:
-        feature_win_message = random.choice(FEATURE_WIN_OPTIONS)
+    feature_win_amount = 0
 
-    return render(request, 'scorchy/index.html', {
+    # Prioritize fruit wins over feature wins
+    if win_dict:
+        handle_win(win_dict, jackpot)
+        win_amount = get_win_amount(win_dict, jackpot)
+        win_message = get_win_message(win_dict, jackpot)
+    elif feature_sum >= 8:
+        feature_sum = 8
+        feature_win = get_feature_win()
+        feature_win_message = feature_win['message']
+        feature_win_amount = feature_win['amount']
+        update_np(temp_user_id, feature_win_amount)
+    
+    # Intentionally allowing manual holds + rollovers even if you get a fruit win or feature win
+    manual_hold =  random.randint(1, 6) == 6
+    feature_rollover = manual_hold or random.randint(1, 6) == 6
+
+    insert_new_roll(user_id=temp_user_id, roll=roll, is_holdable=manual_hold, is_rollover=feature_rollover, feature_sum=feature_sum)
+
+    button_text = 'Play Again'
+    if win_amount or feature_win_amount > 0:
+        button_text = 'Collect Winnings'
+
+    return render(request, 'scorchy/slots.html', {
         'feature_sum': feature_sum,
         'feature_win_message': feature_win_message,
         'roll': roll,
-        'top_faded': faded[0:4],
-        'bottom_faded': faded[4:8],
-        'hold_feature': hold_feature,
+        'top_faded': [random.choice(FRUIT_OPTIONS) for _ in range(4)],
+        'bottom_faded': [random.choice(FRUIT_OPTIONS) for _ in range(4)],
+        'feature_rollover': feature_rollover,
         'manual_hold': manual_hold,
-        'win': win,
+        'win_amount': win_amount,
+        'win_message': win_message,
+        'button_text': button_text,
+        'lit_feature_range': list(range(1, min(feature_sum + 1, 9))),
+        'dull_feature_range': list(range(max(feature_sum + 1, 1), 9))
     })

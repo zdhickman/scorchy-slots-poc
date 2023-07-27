@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+      }
+      #scorchy-wrapper {
+        width: 800px;
+        border: 1px solid black;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        padding: 7px;
+      }
+
+      #scorchy-prizes {
+        margin: 0;
+        align-self: flex-start;
+      }
+
+      #scorchy-prizes a {
+        color: #8e0101;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      #scorchy-apology {
+        align-self: flex-start;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scorchy-wrapper">
+      <p id="scorchy-prizes">
+        Click
+        <a target="_blank" rel="noopener noreferer" href="/slotwins">here</a>
+        for the list of prizes.
+      </p>
+      <p id="scorchy-apology">Sorry! It costs five Neopoints per play!</p>
+    </div>
+  </body>
+</html>

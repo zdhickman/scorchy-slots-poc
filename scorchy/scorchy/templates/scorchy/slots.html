@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+      }
+      #scorchy-wrapper {
+        width: 800px;
+        border: 1px solid black;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        padding: 7px;
+      }
+
+      #scorchy-inner-wrapper {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+      }
+
+      #scorchy-prizes {
+        margin: 0;
+        align-self: flex-start;
+      }
+
+      #scorchy-prizes a {
+        color: #8e0101;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      #scorchy-feature {
+        display: flex;
+        flex-flow: row nowrap;
+        margin-bottom: 10px;
+      }
+
+      #scorchy-slots {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 10px;
+        width: fit-content;
+        margin: 10px 0;
+      }
+
+      #scorchy-row {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 10px;
+      }
+
+      #scorchy-row img {
+        border: 1px solid transparent;
+      }
+
+      #scorchy-row:nth-child(odd) img {
+        opacity: 0.5;
+      }
+
+      #scorchy-row:nth-child(even) img {
+        border-color: black;
+      }
+
+      #scorchy-hold {
+        background-color: #ffffee;
+        width: 400px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        padding: 5px 40px;
+        margin-bottom: 10px;
+      }
+
+      .scorchy-hold-node {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+      }
+
+      .scorchy-hold-node label {
+        font-weight: bold;
+        color: red;
+        text-transform: uppercase;
+      }
+
+      input[type="submit"] {
+        margin-bottom: 10px;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/process_slots" method="POST">
+      {% csrf_token %}
+      <div id="scorchy-wrapper">
+        <p id="scorchy-prizes">
+          Click
+          <a target="_blank" rel="noopener noreferer" href="/slotwins">here</a>
+          for the list of prizes.
+        </p>
+        <div id="scorchy-inner-wrapper">
+          <div id="scorchy-slots">
+            <div id="scorchy-row">
+              {% for fruit in top_faded %}
+              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
+              {% endfor %}
+            </div>
+            <div id="scorchy-row">
+              {% for fruit in roll %}
+              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
+              {% endfor %}
+            </div>
+            <div id="scorchy-row">
+              {% for fruit in bottom_faded %}
+              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
+              {% endfor %}
+            </div>
+          </div>
+          {% if manual_hold %}
+          <div id="scorchy-hold">
+            {% for i in '0123'|make_list %}
+            <div class="scorchy-hold-node">
+              <label for="scorchy_hold_{{ i }}">Hold</label>
+              <input type="checkbox" name="scorchy_hold_{{ i }}" />
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %} {% if feature_rollover %}
+          <b>- FEATURE POSITION HELD FOR NEXT SPIN -</b>
+          {% endif %}
+          <!-- This can be cleaned up -->
+          <div id="scorchy-feature">
+            {% for i in lit_feature_range %}
+            <img src="{% static 'scorchy/images/feature/' %}{{ i }}lit.gif" />
+            {% endfor %} {% for i in dull_feature_range %}
+            <img src="{% static 'scorchy/images/feature/' %}{{ i }}dull.gif" />
+            {% endfor %}
+          </div>
+          {% if feature_win_message %}
+          <b>THE VOLCANO ERUPTS!!!</b>
+          <p>{{ feature_win_message }}</p>
+          {% elif win_amount %}
+          <p><b>{{ win_message }}</b></p>
+          {% endif %}
+          <input type="submit" value="{{ button_text }}" />
+        </div>
+      </div>
+    </form>
+  </body>
+</html>

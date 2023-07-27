@@ -1,1 +1,4 @@
 *.php
+output-*
+.env
+*pycache*

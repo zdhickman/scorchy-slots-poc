@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+      }
+
+      #scorchy-prizes {
+        background-color: #efefef;
+        border: 1px solid black;
+        width: 640px;
+        margin: 20px 0;
+        border-spacing: 0;
+        text-align: center;
+      }
+
+      #scorchy-prizes th,
+      #scorchy-prizes td {
+        padding: 5px;
+      }
+
+      #scorchy-prizes th {
+        border-bottom: 1px solid black;
+        background-color: black;
+        color: white;
+      }
+
+      #scorchy-prizes tr td:first-child {
+        width: 130px;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+      }
+
+      #scorchy-prizes tr td:nth-child(2) {
+        background-color: white;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+      }
+
+      #scorchy-prizes tr td:last-child {
+        width: 130px;
+        border-bottom: 1px solid black;
+      }
+
+      #scorchy-prizes tr:last-child td {
+        border-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table id="scorchy-prizes">
+      <tr>
+        <th colspan="3">Scorchy Slots Prizes</th>
+      </tr>
+      <tr>
+        <td><b>Three Cherries</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+        </td>
+        <td><b>15 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Strawberries</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+        </td>
+        <td><b>30 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Grapes</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+        </td>
+        <td><b>60 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Cherries</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/cherry_0.gif' %}" />
+        </td>
+        <td><b>75 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Melons</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+        </td>
+        <td><b>90 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Apples</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+        </td>
+        <td><b>120 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Strawberries</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/strawberry_0.gif' %}" />
+        </td>
+        <td><b>150 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Peaches</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+        </td>
+        <td><b>180 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Bells</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+        </td>
+        <td><b>240 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Grapes</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/grapes_0.gif' %}" />
+        </td>
+        <td><b>300 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Melons</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/melon_0.gif' %}" />
+        </td>
+        <td><b>450 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Apples</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/apple_0.gif' %}" />
+        </td>
+        <td><b>600 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Bags of gold</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+        </td>
+        <td><b>600 NP</b></td></td>
+      </tr>
+
+      <tr>
+        <td><b>Four Peaches</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/peach_0.gif' %}" />
+        </td>
+        <td><b>900 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Bells</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/bell_0.gif' %}" />
+        </td>
+        <td><b>1,200 NP</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Map pieces</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+        </td>
+        <td><b>A Map Piece</b></td>
+      </tr>
+      <tr>
+        <td><b>Three Faeries</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+        </td>
+        <td><b>A Bottled Faerie</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Map pieces</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/mappiece_0.gif' %}" />
+        </td>
+        <td><b>Three Map Pieces</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Faeries</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/faerie_0.gif' %}" />
+        </td>
+        <td><b>Six Faeries</b></td>
+      </tr>
+      <tr>
+        <td><b>Four Bags of gold</b></td>
+        <td>
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+          <img src="{% static 'scorchy/images/fruits/baggold_0.gif' %}" />
+        </td>
+        <td><b>THE JACKPOT!!!</b></td>
+      </tr>
+    </table>
+  </body>
+</html>

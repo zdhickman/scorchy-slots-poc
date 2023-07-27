@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} {% load humanize %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -13,195 +13,130 @@
         font-size: 9pt;
       }
       #scorchy-wrapper {
-        width: 1000px;
+        width: 800px;
         border: 1px solid black;
-        display: flex;
-        justify-content: center;
-      }
-      #scorchy-inner-wrapper {
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-      }
-      #scorchy-feature {
-        display: flex;
-        flex-flow: row nowrap;
-        margin-bottom: 10px;
+        padding: 7px;
       }
 
-      #scorchy-slots {
-        display: flex;
-        flex-flow: column nowrap;
-        gap: 10px;
-        width: fit-content;
-        margin-bottom: 10px;
+      #scorchy-prizes {
+        margin: 0;
+        align-self: flex-start;
       }
 
-      #scorchy-row {
-        display: flex;
-        flex-flow: row nowrap;
-        gap: 10px;
-      }
-
-      #scorchy-row img {
-        border: 1px solid transparent;
-      }
-
-      #scorchy-row:nth-child(odd) img {
-        opacity: 0.5;
-      }
-
-      #scorchy-row:nth-child(even) img {
-        border-color: black;
-      }
-
-      #scorchy-hold {
-        background-color: #ffffee;
-        width: 100%;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-between;
-        padding: 5px 40px;
-        margin-bottom: 10px;
-      }
-
-      .scorchy-hold-node {
-        display: flex;
-        flex-flow: column nowrap;
-      }
-
-      .scorchy-hold-node label {
+      #scorchy-prizes a {
+        color: #8e0101;
         font-weight: bold;
-        color: red;
-        text-transform: uppercase;
+        text-decoration: none;
       }
 
-      input[type="submit"] {
-        margin-bottom: 10px;
-        font-family: Verdana, Arial, Helvetica, sans-serif;
-        font-size: 9pt;
+      #scorchy-scorchio {
+        width: 200px;
+        flex-grow: 0;
+      }
+
+      #scorchy-rules {
+        background-color: #efefef;
+        border: 1px solid black;
+        width: 600px;
+        margin: 20px 0;
+        border-spacing: 0;
+      }
+
+      #scorchy-rules th,
+      #scorchy-rules td {
+        padding: 5px;
+      }
+
+      #scorchy-rules th {
+        border-bottom: 1px solid black;
+      }
+
+      #scorchy-rules tr td:first-child {
+        width: 30%;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+      }
+
+      #scorchy-rules tr td:last-child {
+        width: 70%;
+        border-bottom: 1px solid black;
+      }
+
+      #scorchy-rules tr:last-child td {
+        border-bottom: 0;
       }
     </style>
   </head>
   <body>
-    <form action="/" method="POST">
+    <form action="/slots" method="POST">
       {% csrf_token %}
       <div id="scorchy-wrapper">
-        <div id="scorchy-inner-wrapper">
-          <div id="scorchy-slots">
-            <div id="scorchy-row">
-              {% for fruit in top_faded %}
-              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
-              {% endfor %}
-            </div>
-            <div id="scorchy-row">
-              {% for fruit in roll %}
-              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
-              {% endfor %}
-            </div>
-            <div id="scorchy-row">
-              {% for fruit in bottom_faded %}
-              <img src="{% static 'scorchy/images/fruits/' %}{{ fruit }}.gif" />
-              {% endfor %}
-            </div>
-          </div>
-          {% if manual_hold %}
-          <div id="scorchy-hold">
-            <div class="scorchy-hold-node">
-              <label for="scorchy_hold_node_1">Hold</label>
-              <input type="checkbox" name="scorchy_hold_node_1" />
-              <input
-                type="hidden"
-                name="scorchy_hold_fruit_1"
-                value="{{ roll.0 }}"
-              />
-            </div>
-            <div class="scorchy-hold-node">
-              <label for="scorchy_hold_node_2">Hold</label>
-              <input type="checkbox" name="scorchy_hold_node_2" />
-              <input
-                type="hidden"
-                name="scorchy_hold_fruit_2"
-                value="{{ roll.1 }}"
-              />
-            </div>
-            <div class="scorchy-hold-node">
-              <label for="scorchy_hold_node_3">Hold</label>
-              <input type="checkbox" name="scorchy_hold_node_3" />
-              <input
-                type="hidden"
-                name="scorchy_hold_fruit_3"
-                value="{{ roll.2 }}"
-              />
-            </div>
-            <div class="scorchy-hold-node">
-              <label for="scorchy_hold_node_4">Hold</label>
-              <input type="checkbox" name="scorchy_hold_node_4" />
-              <input
-                type="hidden"
-                name="scorchy_hold_fruit_4"
-                value="{{ roll.3 }}"
-              />
-            </div>
-          </div>
-          {% endif %} {% if hold_feature %}
-          <b>- FEATURE POSITION HELD FOR NEXT SPIN -</b>
-          <!-- Temporary and unsafe -->
-          <input
-            type="hidden"
-            name="hold_feature_value"
-            value="{{ feature_sum }}"
+        <p id="scorchy-prizes">
+          Click
+          <a target="_blank" rel="noopener noreferer" href="/slotwins">here</a>
+          for the list of prizes.
+        </p>
+        <p>
+          <img
+            src="https://grundoscafe.b-cdn.net/pets/happy/scorchio_plushie.gif"
           />
-          {% endif %}
-          <!-- This can be cleaned up -->
-          <div id="scorchy-feature">
-            {% if feature_sum >= 1 %}
-            <img src="{% static 'scorchy/images/feature/1lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/1dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 2 %}
-            <img src="{% static 'scorchy/images/feature/2lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/2dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 3 %}
-            <img src="{% static 'scorchy/images/feature/3lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/3dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 4 %}
-            <img src="{% static 'scorchy/images/feature/4lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/4dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 5 %}
-            <img src="{% static 'scorchy/images/feature/5lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/5dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 6 %}
-            <img src="{% static 'scorchy/images/feature/6lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/6dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 7 %}
-            <img src="{% static 'scorchy/images/feature/7lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/7dull.gif' %}" />
-            {% endif %} {% if feature_sum >= 8 %}
-            <img src="{% static 'scorchy/images/feature/8lit.gif' %}" />
-            {% else %}
-            <img src="{% static 'scorchy/images/feature/8dull.gif' %}" />
-            {% endif %}
-          </div>
-          {% if feature_win_message %}
-          <strong>THE VOLCANO ERUPTS!!!</strong>
-          <p>{{ feature_win_message }}</p>
-          <!-- This should not say "Collect Winnings" for negative events -->
-          <input type="submit" value="Collect Winnings" />
-          {% elif win %}
-          <!-- Temporary win message -->
-          <p>Hooray you won! Prize: {{ win }}</p>
-          <input type="submit" value="Collect Winnings" />
-          {% else %}
-          <input type="submit" value="Play Again" />
-          {% endif %}
-        </div>
+        </p>
+        <p>Jackpot: <b>{{ jackpot|intcomma }}</b> Neopoints!</p>
+        <input type="submit" value="Click Here to Play" />
+        <table id="scorchy-rules">
+          <tr>
+            <th colspan="2">Rules of the Game</th>
+          </tr>
+          <tr>
+            <td><b>How do I play Scorchy Slots?</b></td>
+            <td>
+              Scorchy Slots costs 5 NP to play. In order to start a new game,
+              click on the Play Again button. This will automatically deduct 5
+              NP from you.
+            </td>
+          </tr>
+          <tr>
+            <td><b>What is the aim of the game?</b></td>
+            <td>
+              You need to get three or four of the same item in a row on the
+              "WIN" line in order to win. If you have three of the same in the
+              "WIN" line, but there is another item between them, you have not
+              won.
+            </td>
+          </tr>
+          <tr>
+            <td><b>What can I win?</b></td>
+            <td>
+              You can win anything from the small prize of 1 NP up to the grand
+              prize of the jackpot. You can even win all 6 faeries (one of each
+              type). The available prizes are shown in detail here.
+            </td>
+          </tr>
+          <tr>
+            <td><b>What are holds?</b></td>
+            <td>
+              To help you get a win you may be given the chance to hold. If so,
+              you will see four check boxes under each reel. If you check a box
+              and then spin the reels, the reel you have checked will hold
+              position and not spin.
+            </td>
+          </tr>
+          <tr>
+            <td><b>What does the feature do?</b></td>
+            <td>
+              You may notice that some of the fruits have numbers on them. If
+              you get a fruit with a number three on it, then the feature bar
+              lights up three places and so on. Sometimes your progress up the
+              feature bar is held until the next go and any additional numbers
+              you get are added on. If you light up all the numbers on the
+              feature bar you win a random prize. This could be a very good
+              prize, or a not-so-great thing. You may even lose NP!
+            </td>
+          </tr>
+        </table>
       </div>
     </form>
   </body>

@@ -20,4 +20,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name="index"),
+    path('slots', views.slots, name="slots"),
+    path('process_slots', views.process_slots, name="process_slots"),
+    path('slotwins', views.slotwins, name="slotwins")
 ]
