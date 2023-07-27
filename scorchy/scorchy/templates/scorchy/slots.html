@@ -126,7 +126,7 @@
               {% endfor %}
             </div>
           </div>
-          {% if manual_hold %}
+          {% if is_holdable %}
           <div id="scorchy-hold">
             {% for i in '0123'|make_list %}
             <div class="scorchy-hold-node">
@@ -135,7 +135,7 @@
             </div>
             {% endfor %}
           </div>
-          {% endif %} {% if feature_rollover %}
+          {% endif %} {% if is_rollover %}
           <b>- FEATURE POSITION HELD FOR NEXT SPIN -</b>
           {% endif %}
           <!-- This can be cleaned up -->

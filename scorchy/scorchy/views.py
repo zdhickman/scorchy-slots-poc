@@ -258,10 +258,10 @@ def slots(request):
         update_np(temp_user_id, feature_win_amount)
     
     # Intentionally allowing manual holds + rollovers even if you get a fruit win or feature win
-    manual_hold =  random.randint(1, 6) == 6
-    feature_rollover = manual_hold or random.randint(1, 6) == 6
+    is_holdable =  random.randint(1, 6) == 6
+    is_rollover = is_holdable or random.randint(1, 6) == 6
 
-    insert_new_roll(user_id=temp_user_id, roll=roll, is_holdable=manual_hold, is_rollover=feature_rollover, feature_sum=feature_sum)
+    insert_new_roll(user_id=temp_user_id, roll=roll, is_holdable=is_holdable, is_rollover=is_rollover, feature_sum=feature_sum)
 
     button_text = 'Play Again'
     if win_amount or feature_win_amount > 0:
@@ -273,8 +273,8 @@ def slots(request):
         'roll': roll,
         'top_faded': [random.choice(FRUIT_OPTIONS) for _ in range(4)],
         'bottom_faded': [random.choice(FRUIT_OPTIONS) for _ in range(4)],
-        'feature_rollover': feature_rollover,
-        'manual_hold': manual_hold,
+        'is_rollover': is_rollover,
+        'is_holdable': is_holdable,
         'win_amount': win_amount,
         'win_message': win_message,
         'button_text': button_text,
